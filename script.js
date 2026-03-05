@@ -1,12 +1,57 @@
 //your JS code here. If required.
-let player1="";
-let player2="";
-let currentPlayer="X";
-let boardState=["","","","","","","","",""];
+let player1 = "";
+let player2 = "";
+let currentPlayer = "x";
+let currentName = "";
+let board = ["","","","","","","","",""];
 
-let message=document.querySelector(".message");
+const message = document.querySelector(".message");
 
-let winPatterns=[
+document.getElementById("submit").onclick = function(){
+
+player1 = document.getElementById("player1").value;
+player2 = document.getElementById("player2").value;
+
+currentName = player1;
+
+document.getElementById("board").style.display = "block";
+
+message.innerText = player1 + ", you're up";
+
+};
+
+for(let i=1;i<=9;i++){
+
+document.getElementById(i).addEventListener("click",function(){
+
+if(this.innerText !== "") return;
+
+this.innerText = currentPlayer;
+
+board[i-1] = currentPlayer;
+
+if(checkWinner()){
+message.innerText = currentName + " congratulations you won!";
+return;
+}
+
+if(currentPlayer === "x"){
+currentPlayer = "o";
+currentName = player2;
+}else{
+currentPlayer = "x";
+currentName = player1;
+}
+
+message.innerText = currentName + ", you're up";
+
+});
+
+}
+
+function checkWinner(){
+
+const winPatterns = [
 [0,1,2],
 [3,4,5],
 [6,7,8],
@@ -17,71 +62,18 @@ let winPatterns=[
 [2,4,6]
 ];
 
-document.getElementById("submit").onclick=function(){
-
-player1=document.getElementById("player-1").value;
-player2=document.getElementById("player-2").value;
-
-document.getElementById("board").style.display="grid";
-document.getElementById("title").style.display="block";
-
-message.textContent=player1 + ", you're up";
-
-};
-
-let cells=document.querySelectorAll(".cell");
-
-cells.forEach((cell,index)=>{
-
-cell.addEventListener("click",function(){
-
-if(boardState[index]!=="") return;
-
-if(currentPlayer==="X"){
-cell.textContent="X";
-boardState[index]="X";
-}
-else{
-cell.textContent="O";
-boardState[index]="O";
-}
-
-checkWinner();
-
-currentPlayer=currentPlayer==="X"?"O":"X";
-
-if(currentPlayer==="X"){
-message.textContent=player1 + ", you're up";
-}else{
-message.textContent=player2 + ", you're up";
-}
-
-});
-
-});
-
-function checkWinner(){
-
 for(let pattern of winPatterns){
 
-let a=pattern[0];
-let b=pattern[1];
-let c=pattern[2];
+let a = pattern[0];
+let b = pattern[1];
+let c = pattern[2];
 
-if(
-boardState[a] &&
-boardState[a]===boardState[b] &&
-boardState[a]===boardState[c]
-){
-
-let winner=boardState[a]==="X"?player1:player2;
-
-message.textContent=winner+" congratulations you won!";
-
-cells.forEach(cell=>cell.style.pointerEvents="none");
-
+if(board[a] && board[a] === board[b] && board[a] === board[c]){
+return true;
 }
 
 }
+
+return false;
 
 }
